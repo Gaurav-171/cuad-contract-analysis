@@ -1,0 +1,6 @@
+.env
+__pycache__/
+*.pyc
+data/CUAD_v1.zip
+data/contracts/
+.DS_Store
