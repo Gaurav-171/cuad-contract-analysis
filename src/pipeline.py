@@ -54,6 +54,12 @@ def run(num_contracts: int | None = None, build_search_index: bool = True) -> li
             summary = summarizer.summarize(text, clauses)
         except Exception as exc:  # never let one contract kill the batch
             print(f"[error] {contract_id}: {type(exc).__name__}: {exc}")
+            if "retries exhausted" in str(exc):
+                # Persistent rate limiting (e.g. daily free-tier quota spent).
+                # Stop here; the checkpoint lets a later run resume cleanly.
+                print("[pipeline] Quota appears exhausted - stopping. "
+                      "Re-run `python run_pipeline.py` to resume from the checkpoint.")
+                break
             continue
 
         results.append({
