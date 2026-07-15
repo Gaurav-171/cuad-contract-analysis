@@ -92,7 +92,7 @@ re-run the same command and it continues where it stopped.
   next sampled contract (the loader over-samples 2× for this reason).
 
 ### 2. LLM extraction & summarization
-- **Model:** Google Gemini (`gemini-2.5-flash` by default) called through the
+- **Model:** Google Gemini (`gemini-3.5-flash` by default) called through the
   plain REST API — dependency-light and easily swappable via `.env`. The free
   tier is sufficient for the whole assignment.
 - **Structured output:** every call uses JSON mode with an explicit response

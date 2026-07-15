@@ -66,7 +66,11 @@ def generate_json(prompt: str, schema: dict, temperature: float = 0.0) -> dict:
     }
     data = _post(url, payload)
     try:
-        text = data["candidates"][0]["content"]["parts"][0]["text"]
+        parts = data["candidates"][0]["content"]["parts"]
+        # Thinking-capable models may emit thought parts before the answer;
+        # the JSON payload is in the non-thought text parts.
+        text = "".join(p["text"] for p in parts
+                       if "text" in p and not p.get("thought"))
         return json.loads(text)
     except (KeyError, IndexError, json.JSONDecodeError) as exc:
         raise RuntimeError(f"Unexpected LLM response: {json.dumps(data)[:500]}") from exc

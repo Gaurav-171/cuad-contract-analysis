@@ -25,7 +25,7 @@ MIN_TEXT_CHARS = 1500  # skip scanned/empty PDFs that yield less text than this
 
 # --- LLM (Google Gemini) --------------------------------------------------
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
-GENERATION_MODEL = os.getenv("GENERATION_MODEL", "gemini-2.5-flash")
+GENERATION_MODEL = os.getenv("GENERATION_MODEL", "gemini-3.5-flash")
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "gemini-embedding-001")
 API_BASE = "https://generativelanguage.googleapis.com/v1beta"
 
