@@ -39,7 +39,7 @@ def sample_contracts(zip_path: Path, n: int, out_dir: Path) -> list[Path]:
     the text-extraction step can be replaced without re-downloading.
     """
     out_dir.mkdir(parents=True, exist_ok=True)
-    existing = sorted(out_dir.glob("*.pdf"))
+    existing = sorted(p for p in out_dir.iterdir() if p.suffix.lower() == ".pdf")
     if len(existing) >= n:
         print(f"[data] {len(existing)} PDFs already in {out_dir}, skipping extraction.")
         return existing
@@ -58,7 +58,7 @@ def sample_contracts(zip_path: Path, n: int, out_dir: Path) -> list[Path]:
                 continue
             with zf.open(member) as src, open(target, "wb") as dst:
                 shutil.copyfileobj(src, dst)
-    pdfs = sorted(out_dir.glob("*.pdf"))
+    pdfs = sorted(p for p in out_dir.iterdir() if p.suffix.lower() == ".pdf")
     print(f"[data] Extracted {len(pdfs)} candidate PDFs to {out_dir}")
     return pdfs
 
