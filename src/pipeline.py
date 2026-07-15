@@ -52,8 +52,8 @@ def run(num_contracts: int | None = None, build_search_index: bool = True) -> li
         try:
             clauses = clause_extractor.extract_clauses(text)
             summary = summarizer.summarize(text, clauses)
-        except RuntimeError as exc:
-            print(f"[error] {contract_id}: {exc}")
+        except Exception as exc:  # never let one contract kill the batch
+            print(f"[error] {contract_id}: {type(exc).__name__}: {exc}")
             continue
 
         results.append({

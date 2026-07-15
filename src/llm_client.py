@@ -29,7 +29,14 @@ def _post(url: str, payload: dict) -> dict:
     """POST with exponential backoff on rate limits and transient errors."""
     for attempt in range(config.MAX_RETRIES):
         _throttle()
-        resp = requests.post(url, json=payload, timeout=300)
+        try:
+            resp = requests.post(url, json=payload, timeout=300)
+        except requests.RequestException as exc:  # resets, timeouts, DNS blips
+            delay = min(2 ** attempt * 5, 60)
+            print(f"[llm] network error ({type(exc).__name__}), retrying in {delay}s "
+                  f"(attempt {attempt + 1}/{config.MAX_RETRIES})")
+            time.sleep(delay)
+            continue
         if resp.status_code == 200:
             return resp.json()
         if resp.status_code in (429, 500, 502, 503):
