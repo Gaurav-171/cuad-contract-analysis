@@ -24,8 +24,16 @@ RANDOM_SEED = 42  # deterministic contract sampling
 MIN_TEXT_CHARS = 1500  # skip scanned/empty PDFs that yield less text than this
 
 # --- LLM (Google Gemini) --------------------------------------------------
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
-GENERATION_MODEL = os.getenv("GENERATION_MODEL", "gemini-3.5-flash")
+# One or more API keys (comma-separated). The free tier allows ~20 requests
+# per day per project *per model*, so the client rotates through the
+# GENERATION_MODELS fallback chain (and then the next key) as buckets run out.
+GEMINI_API_KEYS = [k.strip() for k in os.getenv(
+    "GEMINI_API_KEYS", os.getenv("GEMINI_API_KEY", "")).split(",") if k.strip()]
+GENERATION_MODELS = [m.strip() for m in os.getenv(
+    "GENERATION_MODELS",
+    "gemini-3.5-flash,gemini-3-flash-preview,gemini-3.1-flash-lite,"
+    "gemini-3.1-pro-preview,gemini-3-pro-preview,gemini-2.5-flash",
+).split(",") if m.strip()]
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "gemini-embedding-001")
 API_BASE = "https://generativelanguage.googleapis.com/v1beta"
 
